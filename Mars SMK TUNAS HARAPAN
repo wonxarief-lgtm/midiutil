@@ -1,0 +1,56 @@
+# mars_smk.py
+# Membuat file MIDI Mars SMK Tunas Harapan
+from midiutil import MIDIFile
+
+# Buat MIDI
+track = 0
+channel = 0
+time = 0
+tempo = 120   # tempo mars (2/4)
+volume = 100
+
+# Nada dasar Do = C (oktaf 4)
+scale = {
+    1: 60, # do (C4)
+    2: 62, # re (D4)
+    3: 64, # mi (E4)
+    4: 65, # fa (F4)
+    5: 67, # sol (G4)
+    6: 69, # la (A4)
+    7: 71, # si (B4)
+}
+
+# Melodi lagu (not angka, durasi dalam ketukan)
+# Durasi: 1 = seperempat, 2 = setengah, dst.
+melody = [
+    # Intro
+    (1,1),(3,1),(4,1),(5,1),(1,1),(1,1),(5,2),
+
+    # Refrein
+    (1,1),(1,1),(3,1),(4,1),(5,1),(5,1),(6,1),(5,1),
+    (4,1),(4,1),(3,1),(2,1),(1,2),
+
+    (1,1),(1,1),(3,1),(4,1),(5,1),(6,1),(5,1),(4,1),
+    (3,1),(4,1),(5,1),(3,1),(1,2),
+
+    (1,1),(3,1),(4,1),(5,1),(6,1),(5,1),(4,1),(3,1),
+    (4,1),(3,1),(2,1),(1,1),(5,2),
+
+    (1,1),(3,1),(4,1),(5,1),(6,1),(5,1),(4,1),(3,1),
+    (4,1),(3,1),(2,1),(1,1),(1,2),
+]
+
+# Buat file MIDI
+midi = MIDIFile(1)
+midi.addTempo(track, time, tempo)
+
+for note, dur in melody:
+    pitch = scale.get(note, 60)  # default ke C4
+    midi.addNote(track, channel, pitch, time, dur, volume)
+    time += dur
+
+# Simpan
+with open("mars_smk_tunas_harapan.mid", "wb") as output_file:
+    midi.writeFile(output_file)
+
+print("✅ File 'mars_smk_tunas_harapan.mid' berhasil dibuat!")
